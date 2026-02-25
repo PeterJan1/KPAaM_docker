@@ -7,7 +7,7 @@ ARG USER_GID=$USER_UID
 # preventing to ask for user input
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
+# Delete user if it exists in container
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
 
 # Install system packages
@@ -23,6 +23,16 @@ RUN apt-get update \
     build-essential \
     python-is-python3 \
     python3-pip \ 
+    python3.12-venv \
+    # GUI / OpenGL dependencies
+    libgl1 \
+    libgl1-mesa-dri \
+    mesa-utils \
+    libx11-xcb1 \
+    libxrender1 \
+    libxi6 \
+    libxrandr2 \
+    python3-tk \
     && rm -rf /var/lib/apt/lists/*
 
 # Create the user
@@ -38,7 +48,7 @@ RUN mkdir -p /home/$USERNAME/projects
 RUN chown -R $USERNAME:$USER_GID /home/$USERNAME/projects
 
 USER $USERNAME
-WORKDIR /home/$USERNAME
+WORKDIR /home/$USERNAME/projects
 
 # Make zsh look nicer
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
