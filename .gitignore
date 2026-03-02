@@ -1,7 +1,5 @@
-# Ignore everything in the projects folder
-projects/*
-# But do not ignore the folder itself
-!projects/.gitkeep
-
+env/
+.venv/
+projects/**/env/
 .vscode
 
